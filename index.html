@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Caesar Cipher</title>
+  <style>
+    * { box-sizing: border-box; font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; }
+
+    body {
+      margin: 0;
+      background: #0f172a;
+      color: #e5e7eb;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 420px;
+      background: #020617;
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 20px 40px rgba(0,0,0,.5);
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #22d3ee, #6366f1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 20px;
+      color: #020617;
+    }
+
+    h1 {
+      font-size: 1.3rem;
+      margin: 0;
+    }
+
+    label {
+      font-size: .9rem;
+      opacity: .8;
+    }
+
+    select, textarea, input, button {
+      width: 100%;
+      margin-top: 6px;
+      margin-bottom: 14px;
+      padding: 12px;
+      border-radius: 12px;
+      border: none;
+      background: #020617;
+      color: #e5e7eb;
+      outline: 1px solid #1e293b;
+      font-size: 1rem;
+    }
+
+    textarea {
+      resize: none;
+      height: 90px;
+    }
+
+    button {
+      background: linear-gradient(135deg, #22d3ee, #6366f1);
+      color: #020617;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .result {
+      margin-top: 10px;
+      padding: 12px;
+      border-radius: 12px;
+      background: #020617;
+      outline: 1px solid #1e293b;
+      min-height: 50px;
+      word-wrap: break-word;
+    }
+
+    footer {
+      text-align: center;
+      font-size: .75rem;
+      opacity: .5;
+      margin-top: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="logo">C</div>
+      <h1>Caesar Cipher</h1>
+    </header>
+
+    <label>Mode</label>
+    <select id="mode">
+      <option value="encode">Encode</option>
+      <option value="decode">Decode</option>
+    </select>
+
+    <label>Message</label>
+    <textarea id="text" placeholder="type your message..."></textarea>
+
+    <label>Shift</label>
+    <input id="shift" type="number" value="3" />
+
+    <button onclick="runCipher()">Run</button>
+
+    <div class="result" id="result"></div>
+
+    <footer>Made for GitHub · Mobile Friendly</footer>
+  </div>
+
+  <script>
+    const alphabet = "abcdefghijklmnopqrstuvwxyz";
+
+    function runCipher() {
+      const mode = document.getElementById("mode").value;
+      const text = document.getElementById("text").value.toLowerCase();
+      let shift = parseInt(document.getElementById("shift").value) || 0;
+      shift %= 26;
+
+      let output = "";
+
+      for (let char of text) {
+        if (alphabet.includes(char)) {
+          const index = alphabet.indexOf(char);
+          const newIndex = mode === "encode" ? index + shift : index - shift;
+          output += alphabet[(newIndex + 26) % 26];
+        } else {
+          output += char;
+        }
+      }
+
+      document.getElementById("result").textContent = output;
+    }
+  </script>
+</body>
+</html>
