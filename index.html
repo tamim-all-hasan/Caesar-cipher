@@ -3,151 +3,233 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Caesar Cipher</title>
+  <title>CryptoHub - Multi-Cipher Tool</title>
   <style>
-    * { box-sizing: border-box; font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif; }
+    :root {
+      --primary: #f472b6; /* Pink accent */
+      --secondary: #8b5cf6; /* Purple accent */
+      --bg: #030712;
+      --card: #111827;
+    }
+
+    * { box-sizing: border-box; font-family: 'Inter', system-ui, sans-serif; transition: all 0.2s ease; }
 
     body {
       margin: 0;
-      background: #0f172a;
-      color: #e5e7eb;
+      background: var(--bg);
+      background-image: radial-gradient(circle at 50% 50%, #1e1b4b 0%, #030712 100%);
+      color: #f3f4f6;
       min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 16px;
+      padding: 15px;
     }
 
-    .app {
+    .app-card {
       width: 100%;
-      max-width: 420px;
-      background: #020617;
-      border-radius: 20px;
-      padding: 20px;
-      box-shadow: 0 20px 40px rgba(0,0,0,.5);
+      max-width: 480px;
+      background: var(--card);
+      border-radius: 24px;
+      padding: 30px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      border: 1px solid #1f2937;
     }
 
     header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 20px;
+      text-align: center;
+      margin-bottom: 25px;
     }
 
-    .logo {
-      width: 44px;
-      height: 44px;
+    .badge {
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    h1 { font-size: 1.8rem; margin: 10px 0 5px; background: linear-gradient(to right, #fff, #9ca3af); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+    .input-wrapper { margin-bottom: 20px; }
+
+    label { display: block; font-size: 0.8rem; color: #9ca3af; margin-bottom: 8px; font-weight: 500; }
+
+    select, textarea, input {
+      width: 100%;
+      padding: 14px;
       border-radius: 12px;
-      background: linear-gradient(135deg, #22d3ee, #6366f1);
+      border: 1px solid #374151;
+      background: #1f2937;
+      color: #fff;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    select:focus, textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(244, 114, 182, 0.2); }
+
+    .grid-2 { display: grid; grid-template-columns: 1.5fr 1fr; gap: 12px; }
+
+    textarea { height: 110px; resize: none; line-height: 1.5; }
+
+    .result-area {
+      background: #030712;
+      padding: 20px;
+      border-radius: 16px;
+      margin: 20px 0;
+      border: 1px dashed #374151;
+      min-height: 60px;
+      position: relative;
+    }
+
+    #result {
+      word-break: break-all;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: var(--primary);
+    }
+
+    .actions { display: flex; gap: 10px; }
+
+    button {
+      flex: 1;
+      padding: 14px;
+      border-radius: 12px;
+      border: none;
+      font-weight: 700;
+      cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 800;
-      font-size: 20px;
-      color: #020617;
+      gap: 8px;
     }
 
-    h1 {
-      font-size: 1.3rem;
-      margin: 0;
-    }
+    .btn-main { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; }
+    .btn-main:hover { transform: translateY(-2px); box-shadow: 0 10px 15px -3px rgba(139, 92, 246, 0.3); }
 
-    label {
-      font-size: .9rem;
-      opacity: .8;
-    }
+    .btn-sec { background: #374151; color: white; }
+    .btn-sec:hover { background: #4b5563; }
 
-    select, textarea, input, button {
-      width: 100%;
-      margin-top: 6px;
-      margin-bottom: 14px;
-      padding: 12px;
-      border-radius: 12px;
-      border: none;
-      background: #020617;
-      color: #e5e7eb;
-      outline: 1px solid #1e293b;
-      font-size: 1rem;
-    }
+    .shift-container { display: block; }
+    .hidden { display: none; }
 
-    textarea {
-      resize: none;
-      height: 90px;
-    }
-
-    button {
-      background: linear-gradient(135deg, #22d3ee, #6366f1);
-      color: #020617;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .result {
-      margin-top: 10px;
-      padding: 12px;
-      border-radius: 12px;
-      background: #020617;
-      outline: 1px solid #1e293b;
-      min-height: 50px;
-      word-wrap: break-word;
-    }
-
-    footer {
-      text-align: center;
-      font-size: .75rem;
-      opacity: .5;
-      margin-top: 14px;
-    }
+    footer { text-align: center; margin-top: 20px; font-size: 0.75rem; color: #6b7280; }
   </style>
 </head>
 <body>
-  <div class="app">
+
+  <div class="app-card">
     <header>
-      <div class="logo">C</div>
-      <h1>Caesar Cipher</h1>
+      <span class="badge">Advanced Encryption</span>
+      <h1>CryptoHub</h1>
     </header>
 
-    <label>Mode</label>
-    <select id="mode">
-      <option value="encode">Encode</option>
-      <option value="decode">Decode</option>
-    </select>
+    <div class="input-wrapper">
+      <label>Select Algorithm</label>
+      <select id="algo" onchange="toggleShift()">
+        <option value="caesar">Caesar Cipher</option>
+        <option value="base64">Base64 Encoding</option>
+        <option value="reverse">Reverse Text</option>
+      </select>
+    </div>
 
-    <label>Message</label>
-    <textarea id="text" placeholder="type your message..."></textarea>
+    <div class="input-wrapper grid-2">
+      <div>
+        <label>Mode</label>
+        <select id="mode" onchange="process()">
+          <option value="encode">Encrypt / Encode</option>
+          <option value="decode">Decrypt / Decode</option>
+        </select>
+      </div>
+      <div id="shift-box">
+        <label>Shift Key</label>
+        <input id="shift" type="number" value="3" oninput="process()" />
+      </div>
+    </div>
 
-    <label>Shift</label>
-    <input id="shift" type="number" value="3" />
+    <div class="input-wrapper">
+      <label>Input Message</label>
+      <textarea id="input-text" placeholder="Enter your text here..." oninput="process()"></textarea>
+    </div>
 
-    <button onclick="runCipher()">Run</button>
+    <label>Output</label>
+    <div class="result-area">
+      <div id="result">Waiting for input...</div>
+    </div>
 
-    <div class="result" id="result"></div>
+    <div class="actions">
+      <button class="btn-main" onclick="copyText()">Copy Result</button>
+      <button class="btn-sec" onclick="resetAll()">Reset</button>
+    </div>
 
-    <footer>Made for GitHub · Mobile Friendly</footer>
+    <footer>Built with ❤️ for Privacy</footer>
   </div>
 
   <script>
-    const alphabet = "abcdefghijklmnopqrstuvwxyz";
+    function toggleShift() {
+      const algo = document.getElementById("algo").value;
+      const shiftBox = document.getElementById("shift-box");
+      // Caesar ছাড়া অন্যগুলোতে Shift দরকার নেই
+      shiftBox.className = (algo === "caesar") ? "" : "hidden";
+      process();
+    }
 
-    function runCipher() {
+    function process() {
+      const algo = document.getElementById("algo").value;
       const mode = document.getElementById("mode").value;
-      const text = document.getElementById("text").value.toLowerCase();
-      let shift = parseInt(document.getElementById("shift").value) || 0;
-      shift %= 26;
+      const text = document.getElementById("input-text").value;
+      const shift = parseInt(document.getElementById("shift").value) || 0;
+      const resultDiv = document.getElementById("result");
+
+      if (!text) {
+        resultDiv.textContent = "Waiting for input...";
+        return;
+      }
 
       let output = "";
 
-      for (let char of text) {
-        if (alphabet.includes(char)) {
-          const index = alphabet.indexOf(char);
-          const newIndex = mode === "encode" ? index + shift : index - shift;
-          output += alphabet[(newIndex + 26) % 26];
-        } else {
-          output += char;
+      try {
+        if (algo === "caesar") {
+          output = runCaesar(text, mode === "encode" ? shift : -shift);
+        } 
+        else if (algo === "base64") {
+          output = mode === "encode" ? btoa(text) : atob(text);
+        } 
+        else if (algo === "reverse") {
+          output = text.split("").reverse().join("");
         }
+        resultDiv.textContent = output;
+      } catch (e) {
+        resultDiv.textContent = "Error: Invalid data for decoding!";
       }
+    }
 
-      document.getElementById("result").textContent = output;
+    function runCaesar(str, s) {
+      s = ((s % 26) + 26) % 26;
+      return str.split('').map(char => {
+        if (char.match(/[a-z]/i)) {
+          const code = char.charCodeAt(0);
+          const base = (code >= 65 && code <= 90) ? 65 : 97;
+          return String.fromCharCode(((code - base + s) % 26) + base);
+        }
+        return char;
+      }).join('');
+    }
+
+    function copyText() {
+      const res = document.getElementById("result").innerText;
+      if (res && res !== "Waiting for input...") {
+        navigator.clipboard.writeText(res);
+        alert("Copied to clipboard!");
+      }
+    }
+
+    function resetAll() {
+      document.getElementById("input-text").value = "";
+      process();
     }
   </script>
 </body>
